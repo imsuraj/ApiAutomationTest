@@ -6,7 +6,7 @@ module.exports = defineConfig({
   viewportHeight: 1080,
   pageLoadTimeout: 60000,
   video: true,
-  // retries: {openMode:2, runMode: 1},
+  retries: { openMode: 2, runMode: 1 },
 
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
