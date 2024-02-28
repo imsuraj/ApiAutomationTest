@@ -304,7 +304,7 @@ describe('Retrieve Payment Order API tests', () => {
     it('should create payment order and not fetch payment order details for a incorrect  Method', () => {
         // Step 1: Make POST request to create a payment order
         cy.request({
-            method: 'POST',
+            method: 'POST', // Incorrect method intentionally
             url: utils.requestUrl,
             headers: utils.getApiHeaders(),
             body: utils.getRequestBodyForRetrivePaymentOrder(),
@@ -350,7 +350,7 @@ describe('Retrieve Payment Order API tests', () => {
                 failOnStatusCode: false
             }).then((getResponse) => {
 
-                // Verify that the request to get payment order without Id is unauthorized
+                // Verify that the response is unauthorized
                 expect(getResponse.status).to.eq(403)
 
 

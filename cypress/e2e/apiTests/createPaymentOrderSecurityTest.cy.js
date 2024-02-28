@@ -104,7 +104,7 @@ describe('Create Payment Order API security tests', () => {
                 successRedirectUrl: utils.successRedirectUrl,
                 failureRedirectUrl: utils.failureRedirectUrl,
                 randomPayload: "' DROP TABLE Orders --",
-                randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",
+                randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP sadfTABLE Orders --",randomPayload: "' DROP TABLE dsfsdfsOrders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",randomPayload: "' DROP TABLE Orders --",
             },
             failOnStatusCode: false
         }).then((response) => {
