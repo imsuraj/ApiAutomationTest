@@ -53,7 +53,7 @@ PYYPL_KEY="<key>" PYYPL_SECRET="<secret>" npm run cy:run_process
 To run tests individually:
 
 ```bash
-npx cypress open
+PYYPL_KEY="<key>" PYYPL_SECRET="<secret>" npm run cy:open_process
 ```
 
 ## Cypress Folder Structure
