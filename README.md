@@ -46,6 +46,7 @@ Before you begin, ensure you have met the following requirements:
 
 Replace `<key>` and `<secret>` with your actual API key and secret.
 
+To run all tests:
 ```bash
 PYYPL_KEY="<key>" PYYPL_SECRET="<secret>" npm run cy:run_process
 ```
