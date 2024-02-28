@@ -542,7 +542,7 @@ describe('Create Payment Order API Validation tests', () => {
         })
     })
 
-    it.skip('Handles payment order creation with successRedirectUrl and failureRedirectUrl having  invalid URL formats', () => {
+    it('Handles payment order creation with successRedirectUrl and failureRedirectUrl having  invalid URL formats', () => {
         // Load URL test data from fixture file
         cy.fixture('urls').as('urls')
 

@@ -6,7 +6,7 @@ module.exports = defineConfig({
   viewportHeight: 1080,
   pageLoadTimeout: 60000,
   video: true,
-  retries: { openMode: 2, runMode: 1 },
+  retries: { openMode: 1, runMode: 2 },
 
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
@@ -27,7 +27,7 @@ module.exports = defineConfig({
   },
   e2e: {
     baseUrl: 'https://api.dev.pyypl.io',
-    "watchForFileChanges": true,
+    "watchForFileChanges": false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
       require('cypress-mochawesome-reporter/plugin')(on);
