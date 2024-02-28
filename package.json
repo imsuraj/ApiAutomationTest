@@ -1,0 +1,23 @@
+{
+  "name": "nxosapiautomation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "delete:reports": "rm -r cypress/reports/* || true",
+    "prereport": "npm run delete:reports",
+    "cy:open_process": "npm run prereport && cypress open --env key=$PYYPL_KEY,secret=$PYYPL_SECRET",
+    "cy:run_process": "npm run prereport && cypress run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET",
+    "cy:run_process_github_action": "npm run prereport && cypress run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET"
+
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.6.6",
+    "cypress-mochawesome-reporter": "^3.8.2"
+  }
+}

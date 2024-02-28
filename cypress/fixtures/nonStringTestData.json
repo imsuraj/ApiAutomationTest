@@ -1,0 +1,9 @@
+{
+    "nonStringTestData": [
+      123,
+      true,
+      456.78,
+      [1, 2, 3],
+      { "key": "value" }
+    ]
+  }

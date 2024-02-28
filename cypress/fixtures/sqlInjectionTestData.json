@@ -1,0 +1,22 @@
+{
+    "sqlInjectionTestData": [
+        "1' OR 1=1 --",
+        "1' OR 'a'='a",
+        "1' OR 2>1 --",
+        "1' OR 'text'='text",
+        "1'; IF 1=1 WAITFOR DELAY '0:0:10' --",
+        "1'; IF 1=0 WAITFOR DELAY '0:0:10' --",
+        "1' UNION SELECT null, user, version() --",
+        "1' UNION SELECT payment, payment_id, null FROM information_schema.payment --",
+        "1' OR 1=CONVERT(int, (SELECT @@version)) --",
+        "1' OR 1=CONVERT(int, (SELECT 'abc')) --",
+        "1'; EXEC xp_cmdshell('nslookup example.com') --",
+        "1'; EXEC master..xp_cmdshell('ping 127.0.0.1') --",
+        "1'; IF 1=1 WAITFOR DELAY '0:0:10' --",
+        "1'; IF 1=0 WAITFOR DELAY '0:0:10' --",
+        "1' OR 'a' LIKE '%a% --",
+        "1' UNION SELECT null, user, password FROM users --",
+        "1' %6F%72 '1'='1",
+        "0x313b20494E53455254"
+    ]
+}

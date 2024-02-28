@@ -1,0 +1,69 @@
+name: Cypress Tests CI/CD with GitHub Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    env:
+      PYYPL_KEY: ${{ secrets.PYYPL_KEY }}
+      PYYPL_SECRET: ${{ secrets.PYYPL_SECRET }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # Use Node.js version 18
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules  # Cache node_modules directory
+            ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        # Comment: Cache npm dependencies to speed up builds by avoiding unnecessary installations
+
+      - name: Restore dependencies from cache
+        run: npm ci
+        # Comment: Restore npm dependencies from cache to save time on installing dependencies
+
+      - name: Cache ajv
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/ajv  # Cache ajv directory
+          key: ${{ runner.os }}-ajv-${{ hashFiles('**/package-lock.json') }}
+        # Comment: Cache ajv dependencies to speed up builds by avoiding unnecessary installations
+
+      - name: Install ajv if not already installed
+        run: |
+          if [ ! -f "$(npm bin)/ajv" ]; then
+            npm install ajv
+          fi
+        # Comment: Install ajv if not already installed to ensure it is available for tests
+
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run cy:run_process_github_action
+        env:
+          PYYPL_KEY: ${{ secrets.PYYPL_KEY }}
+          PYYPL_SECRET: ${{ secrets.PYYPL_SECRET }}
+        # Comment: Run Cypress Tests using the specified npm script
+
+      - name: Uploading artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Test-execution-report
+          path: cypress/reports/
+          retention-days: 30
+        # Comment: Upload test execution report as an artifact for further analysis

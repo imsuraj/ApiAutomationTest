@@ -1,0 +1,26 @@
+{
+    "invalidSuccessUrls": [
+        "success.com",
+        "invalid/success",
+        "https://success",
+        "https://suc@cess.com",
+        "ftp://success.com",
+        "https://success.com//path",
+        "https://success .com",
+        "https://success.com:8080",
+        "https://success.com",
+        "www.success.com"
+    ],
+    "invalidFailedUrls": [
+        "failedroute.com",
+        "invalid/failedroute",
+        "https://failedroute",
+        "https://failed@route.com",
+        "ftp://failedroute.com",
+        "https://failedroute.com//path",
+        "https://failedroute .com",
+        "https://failedroute.com:8080",
+        "https://failedroute.com",
+        "www.failedroute.com"
+    ]
+}

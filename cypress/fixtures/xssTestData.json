@@ -1,0 +1,14 @@
+{
+    "xssTestData": [
+        "<script>alert('XSS Attempt')</script>",
+        "<img src='x' onerror='alert(\"XSS Attempt\")'>",
+        "<ScRiPt>alert('XSS Attempt')</sCrIpT>",
+        "&lt;script&gt;alert('XSS Attempt')&lt;/script&gt;",
+        "<img src='x' onerror='javascript:alert(\"XSS Attempt\")'>",
+        "<iframe src='data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTIEF0dGVtcHQnKTt9'></iframe>",
+        "<svg/onload='alert(\"XSS Attempt\")'>",
+        "<a href='javascript:alert(\"XSS Attempt\")'>Click me</a>",
+        "<img src='x' onerror='eval(\"alert('XSS Attempt')\")'>",
+        "<svg><script>alert('XSS Attempt')</script></svg>"
+    ]
+}
