@@ -1,23 +1,30 @@
 {
-  "name": "nxosapiautomation",
+  "name": "Automation Test Report",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "delete:reports": "rm -r cypress/reports/* || true",
+    "delete:reports": "rimraf cypress/reports/* || true",
     "prereport": "npm run delete:reports",
     "cy:open_process": "npm run prereport && cypress open --env key=$PYYPL_KEY,secret=$PYYPL_SECRET",
-    "cy:run_process": "npm run prereport && cypress run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET",
-    "cy:run_process_github_action": "npm run prereport && cypress run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET"
-
-
+    "cy:run": "cypress run",
+    "cy:run:parallel": "cypress-parallel -s cy:run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET -t 2 -d 'cypress/e2e/apiTests/*.ts' -r 'cypress-mochawesome-reporter' -o 'cypressParallel=true,charts=true,embeddedScreenshots=true,inlineAssets=true,reportFilename=[status]_[datetime]-report,reportTitle=Automation Test Report'",
+    "generate-report": "generate-mochawesome-report --set-exit-code",
+    "cy:run_process_parallel": "npm run prereport && npm run cy:run:parallel || true && npm run generate-report",
+    "cy:run_process": "npm run prereport && cypress run  --env key=$PYYPL_KEY,secret=$PYYPL_SECRET"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^20.11.25",
+    "ajv": "^8.12.0",
     "cypress": "^13.6.6",
-    "cypress-mochawesome-reporter": "^3.8.2"
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "cypress-multi-reporters": "^1.6.3",
+    "typescript": "^5.4.2",
+    "rimraf": "^5.0.1",
+    "cypress-parallel": "^0.14.0"
   }
 }

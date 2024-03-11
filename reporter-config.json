@@ -1,0 +1,14 @@
+{
+  "overwrite": false,
+  "html": false,
+  "json": true,
+  "charts": true,
+  "reportFilename": "[status]_[datetime]-[name]-report",
+  "reportPageTitle": "API Automation Test Report",
+  "reportTitle": "Automation Test Report",
+  "embeddedScreenshots": true,
+  "inlineAssets": true,
+  "saveAllAttempts": false,
+  "code": true,
+  "autoOpen": false
+}

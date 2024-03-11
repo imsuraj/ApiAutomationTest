@@ -1,6 +1,10 @@
 {
   "include": [
     "./node_modules/cypress",
-    "cypress/**/*.js"
+    "cypress/**/*.js",
+    "cypress/e2e/apiTests/authenticationAndRateLimitingTest.cy.ts",
+    "cypress/support/utils.ts",
+    "cypress/support/e2e.ts",
+    "cypress/support/commands.ts"
   ]
 }

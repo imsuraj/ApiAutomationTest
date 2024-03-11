@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "types": ["node"],
+    "baseUrl": "./",
+    "module": "commonjs",
+    "moduleResolution": "node", // Update this line
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+    // ... other options
+  },
+  "include": ["cypress/**/*.ts"]
+}

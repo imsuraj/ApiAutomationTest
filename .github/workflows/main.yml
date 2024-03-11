@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # Use Node.js version 18
+          node-version: "18" # Use Node.js version 18
 
       - name: Cache npm dependencies
         uses: actions/cache@v4
@@ -42,18 +42,10 @@ jobs:
             node_modules/ajv  # Cache ajv directory
           key: ${{ runner.os }}-ajv-${{ hashFiles('**/package-lock.json') }}
         # Comment: Cache ajv dependencies to speed up builds by avoiding unnecessary installations
-
-      - name: Install ajv if not already installed
-        run: |
-          if [ ! -f "$(npm bin)/ajv" ]; then
-            npm install ajv
-          fi
-        # Comment: Install ajv if not already installed to ensure it is available for tests
-
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
-          command: npm run cy:run_process_github_action
+          command: npm run cy:run_process_parallel
         env:
           PYYPL_KEY: ${{ secrets.PYYPL_KEY }}
           PYYPL_SECRET: ${{ secrets.PYYPL_SECRET }}
