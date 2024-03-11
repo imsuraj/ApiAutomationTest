@@ -1,7 +1,7 @@
 import * as utils from "../../support/utils";
 
 describe("Create Payment Order API tests", () => {
-  it.only("Successfully creates a payment order with valid request with all  parameters", () => {
+  it("Successfully creates a payment order with valid request with all  parameters", () => {
     // Step 1: Make a POST request to create a payment order with valid parameters
     cy.request({
       method: "POST",

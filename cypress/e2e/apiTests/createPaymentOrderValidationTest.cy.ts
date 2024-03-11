@@ -1,7 +1,7 @@
 import * as utils from "../../support/utils";
 
 describe("Create Payment Order API Validation tests", () => {
-  it.only('Handles payment order creation without providing the "description"', () => {
+  it('Handles payment order creation without providing the "description"', () => {
     // Step 1: Make a POST request to create a payment order without providing the "description"
     cy.request({
       method: "POST",

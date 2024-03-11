@@ -1,7 +1,7 @@
-const { defineConfig } = require("cypress");
-const { beforeRunHook } = require("cypress-mochawesome-reporter/lib");
+import { defineConfig } from "cypress";
+import { beforeRunHook } from "cypress-mochawesome-reporter/lib";
 
-module.exports = defineConfig({
+export default defineConfig({
   viewportWidth: 1920,
   viewportHeight: 1080,
   pageLoadTimeout: 60000,

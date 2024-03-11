@@ -5,7 +5,7 @@ describe("Retrieve Payment Order API tests", () => {
    * Get Payment Order API Tests
    */
 
-  it.only("should create payment order and fetch payment order details for a correct payment order Id", () => {
+  it("should create payment order and fetch payment order details for a correct payment order Id", () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
     // Step 1: Make POST request to create a payment order
     cy.request({

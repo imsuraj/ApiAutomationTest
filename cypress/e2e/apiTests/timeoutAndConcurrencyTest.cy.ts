@@ -1,7 +1,7 @@
 import * as utils from "../../support/utils";
 
 describe("Create/Retrieve Payment Order API timeout and concurrency test", () => {
-  it.only("Handles connection timeouts gracefully", () => {
+  it("Handles connection timeouts gracefully", () => {
     const timeoutDuration = 3000; // Set your desired timeout duration in milliseconds
 
     // Step 1: Make POST request to create a payment order

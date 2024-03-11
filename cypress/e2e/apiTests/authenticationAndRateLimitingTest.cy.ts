@@ -1,7 +1,7 @@
 import * as utils from "../../support/utils";
 
 describe("Create Payment Order API Authentication and Rate Limit tests", () => {
-  it.only("Handles invalid API key", () => {
+  it("Handles invalid API key", () => {
     // Step 1: Make POST request to create a payment order
     cy.request({
       method: "POST",

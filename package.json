@@ -9,10 +9,10 @@
     "prereport": "npm run delete:reports",
     "cy:open_process": "npm run prereport && cypress open --env key=$PYYPL_KEY,secret=$PYYPL_SECRET",
     "cy:run": "cypress run",
-    "cy:run:parallel": "cypress-parallel -s cy:run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET -t 2 -d 'cypress/e2e/apiTests/*.ts' -r 'cypress-mochawesome-reporter' -o 'cypressParallel=true,charts=true,embeddedScreenshots=true,inlineAssets=true,reportFilename=[status]_[datetime]-report,reportTitle=Automation Test Report'",
+    "cy:run:parallel": "cypress-parallel -s cy:run --env key=$PYYPL_KEY,secret=$PYYPL_SECRET -t 3 -d 'cypress/e2e/apiTests/*.ts' -r 'cypress-mochawesome-reporter' -o 'cypressParallel=true,charts=true,embeddedScreenshots=true,inlineAssets=true,reportFilename=[status]_[datetime]-report,reportTitle=Automation Test Report'",
     "generate-report": "generate-mochawesome-report --set-exit-code",
-    "cy:run_process_parallel": "npm run prereport && npm run cy:run:parallel || true && npm run generate-report",
-    "cy:run_process": "npm run prereport && cypress run  --env key=$PYYPL_KEY,secret=$PYYPL_SECRET"
+    "cy:run_process": "npm run prereport && npm run cy:run:parallel || true && npm run generate-report",
+    "cy:run_process_sequential": "npm run prereport && cypress run  --env key=$PYYPL_KEY,secret=$PYYPL_SECRET"
   },
   "keywords": [],
   "author": "",

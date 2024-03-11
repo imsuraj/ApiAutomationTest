@@ -71,7 +71,7 @@ describe("Create Payment Order API security tests", () => {
     });
   });
 
-  it.only("Handles malformed JSON Data", () => {
+  it("Handles malformed JSON Data", () => {
     // Make POST request to create a payment order with malformed JSON data
     cy.request({
       method: "POST",
