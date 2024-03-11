@@ -53,7 +53,7 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
-          command: npm run cy:run_process_parallel
+          command: npm run cy:run_process
         env:
           PYYPL_KEY: ${{ secrets.PYYPL_KEY }}
           PYYPL_SECRET: ${{ secrets.PYYPL_SECRET }}
