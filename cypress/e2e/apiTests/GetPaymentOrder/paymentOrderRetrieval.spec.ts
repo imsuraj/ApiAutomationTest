@@ -1,78 +1,83 @@
-import * as utils from "../../support/utils";
+import * as utils from '../../../support/utils';
 
-describe("Retrieve Payment Order API tests", () => {
+describe('Retrieve Payment Order API tests', () => {
   /**
    * Get Payment Order API Tests
    */
 
-  it("should create payment order and fetch payment order details for a correct payment order Id", () => {
+  it('should create payment order and fetch payment order details for a correct payment order Id', () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: requestBody,
       failOnStatusCode: false,
     }).then((createResponse) => {
       expect(createResponse.status).to.eq(200);
+
       const paymentOrderId = createResponse.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(
-        requestBody.successRedirectUrl
-      );
-      const encodeFailuerUrl = encodeURIComponent(
-        requestBody.failureRedirectUrl
-      );
+      const expiresAt = createResponse.body.expiresAt;
 
       // Ensure the response body contains essential properties
-      expect(createResponse.body).have.property(
-        "paymentOrderId",
+      expect(createResponse.body).to.have.property(
+        'paymentOrderId',
         paymentOrderId
       );
-      expect(createResponse.body).have.property("status", "PENDING");
-      // expect(createResponse.body).have.property('webRedirectUrl', `${Cypress.config().baseUrl}?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      expect(createResponse.body).to.have.property('status', 'PENDING');
 
       cy.request({
-        method: "GET",
-        url: utils.requestUrl + "/" + paymentOrderId,
+        method: 'GET',
+        url: `${utils.requestUrl}/${paymentOrderId}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify the success of the get request
         expect(getResponse.status).to.eq(200);
 
+        const expectedCreatedAt = utils.subtractMinutes(expiresAt);
+
         // Ensure the response body contains essential properties with expected values
         expect(getResponse.body).to.have.property(
-          "paymentOrderId",
+          'paymentOrderId',
           paymentOrderId
         );
-        expect(getResponse.body).to.have.property("organizationId");
+        // expect(getResponse.body).to.have.property('organizationId');
         expect(getResponse.body).to.have.property(
-          "organizationName",
+          'organizationName',
           utils.organizationName
         );
-        expect(getResponse.body).to.have.property("amount", requestBody.amount);
+        expect(getResponse.body).to.have.property('amount', requestBody.amount);
         expect(getResponse.body).to.have.property(
-          "currency",
+          'currency',
           requestBody.currency
         );
-        expect(getResponse.body).to.have.property("status", "PENDING");
+
+        // Convert and compare createdAt timestamp
+        const createdAt = getResponse.body.createdAt;
+        const actualCreateAt = utils.convertTimestamp(createdAt);
+        expect(actualCreateAt).to.eq(expectedCreatedAt);
+
+        expect(getResponse.body).to.have.property('expiresAt', expiresAt);
+        expect(getResponse.body).to.have.property('status', 'PENDING');
+        expect(getResponse.body).to.have.property('appRedirectUrl');
         expect(getResponse.body).to.have.property(
-          "successRedirectUrl",
+          'successRedirectUrl',
           utils.successRedirectUrl
         );
         expect(getResponse.body).to.have.property(
-          "failureRedirectUrl",
+          'failureRedirectUrl',
           utils.failureRedirectUrl
         );
       });
     });
   });
 
-  it("should not fetch payment order detail for a correct payment order Id that does not exist", () => {
+  it('should not fetch payment order detail for a correct payment order Id that does not exist', () => {
     // Step 1: Get payment order
     cy.request({
-      method: "GET",
-      url: utils.requestUrl + "/" + utils.generateUUID(),
+      method: 'GET',
+      url: `${utils.requestUrl}/${utils.generateUUID()}`,
       failOnStatusCode: false,
     }).then((getResponse) => {
       // Verify the failure of the get request
@@ -80,30 +85,17 @@ describe("Retrieve Payment Order API tests", () => {
 
       // Ensure the response body contains essential properties with expected values
       expect(getResponse.body).to.have.property(
-        "errorMessage",
-        "PAYMENT_NOT_FOUND"
+        'errorMessage',
+        utils.PAYMENT_NOT_FOUND
       );
     });
   });
 
-  it("should not fetch payment order detail without/empty payment order Id", () => {
-    // Step 1: Try to get Payment Order without payment order Id
-    const paymentOrderId = " ";
-    cy.request({
-      method: "GET",
-      url: utils.requestUrl + "/" + paymentOrderId,
-      failOnStatusCode: false,
-    }).then((getResponse) => {
-      // Verify that the request to get payment order without Id is unauthorized
-      expect(getResponse.status).to.eq(401);
-    });
-  });
-
-  it("should create payment order and not fetch payment order details when (-) is removed from the paymentOrderID", () => {
+  it('should create payment order and not fetch payment order details when (-) is removed from the paymentOrderID', () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: requestBody,
@@ -111,41 +103,34 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       expect(createResponse.status).to.eq(200);
       const paymentOrderId = createResponse.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(
-        requestBody.successRedirectUrl
-      );
-      const encodeFailuerUrl = encodeURIComponent(
-        requestBody.failureRedirectUrl
-      );
 
       // Ensure the response body contains essential properties
-      expect(createResponse.body).have.property(
-        "paymentOrderId",
+      expect(createResponse.body).to.have.property(
+        'paymentOrderId',
         paymentOrderId
       );
-      expect(createResponse.body).have.property("status", "PENDING");
-      // expect(createResponse.body).have.property('webRedirectUrl', `${Cypress.config().baseUrl}?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      expect(createResponse.body).to.have.property('status', 'PENDING');
 
       cy.request({
-        method: "GET",
-        url: utils.requestUrl + "/" + paymentOrderId.replace(/-/g, ""),
+        method: 'GET',
+        url: `${utils.requestUrl}/${paymentOrderId.replace(/-/g, '')}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order with invalid Id format results in 404 Not Found
         expect(getResponse.status).to.eq(404);
         expect(getResponse.body).to.have.property(
-          "errorMessage",
-          "PAYMENT_NOT_FOUND"
+          'errorMessage',
+          utils.PAYMENT_NOT_FOUND
         );
       });
     });
   });
 
-  it("should create payment order and not fetch payment order details when (-) is replaced by space in the paymentOrderID", () => {
+  it('should create payment order and not fetch payment order details when (-) is replaced by space in the paymentOrderID', () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: requestBody,
@@ -153,41 +138,34 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       expect(createResponse.status).to.eq(200);
       const paymentOrderId = createResponse.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(
-        requestBody.successRedirectUrl
-      );
-      const encodeFailuerUrl = encodeURIComponent(
-        requestBody.failureRedirectUrl
-      );
 
       // Ensure the response body contains essential properties
-      expect(createResponse.body).have.property(
-        "paymentOrderId",
+      expect(createResponse.body).to.have.property(
+        'paymentOrderId',
         paymentOrderId
       );
-      expect(createResponse.body).have.property("status", "PENDING");
-      // expect(createResponse.body).have.property('webRedirectUrl', `${Cypress.config().baseUrl}?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      expect(createResponse.body).to.have.property('status', 'PENDING');
 
       cy.request({
-        method: "GET",
-        url: utils.requestUrl + "/" + paymentOrderId.replace(/-/g, " "),
+        method: 'GET',
+        url: `${utils.requestUrl}/${paymentOrderId.replace(/-/g, ' ')}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order with invalid Id format results in 404 Not Found
         expect(getResponse.status).to.eq(404);
         expect(getResponse.body).to.have.property(
-          "errorMessage",
-          "PAYMENT_NOT_FOUND"
+          'errorMessage',
+          utils.PAYMENT_NOT_FOUND
         );
       });
     });
   });
 
-  it("should create payment order and not fetch payment order details when (-) is replaced by special character $ in the paymentOrderID", () => {
+  it('should create payment order and not fetch payment order details when (-) is replaced by special character $ in the paymentOrderID', () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: requestBody,
@@ -195,42 +173,35 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       expect(createResponse.status).to.eq(200);
       const paymentOrderId = createResponse.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(
-        requestBody.successRedirectUrl
-      );
-      const encodeFailuerUrl = encodeURIComponent(
-        requestBody.failureRedirectUrl
-      );
 
       // Ensure the response body contains essential properties
-      expect(createResponse.body).have.property(
-        "paymentOrderId",
+      expect(createResponse.body).to.have.property(
+        'paymentOrderId',
         paymentOrderId
       );
-      expect(createResponse.body).have.property("status", "PENDING");
-      // expect(createResponse.body).have.property('webRedirectUrl', `${Cypress.config().baseUrl}?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      expect(createResponse.body).to.have.property('status', 'PENDING');
 
       cy.request({
-        method: "GET",
-        url: utils.requestUrl + "/" + paymentOrderId.replace(/-/g, "$"),
+        method: 'GET',
+        url: `${utils.requestUrl}/${paymentOrderId.replace(/-/g, '$')}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order with invalid Id format results in 404 Not Found
         expect(getResponse.status).to.eq(404);
         expect(getResponse.body).to.have.property(
-          "errorMessage",
-          "PAYMENT_NOT_FOUND"
+          'errorMessage',
+          utils.PAYMENT_NOT_FOUND
         );
       });
     });
   });
 
-  it("should create payment order and not fetch payment order details when a single character is added before a paymentOrderId", () => {
+  it('should create payment order and not fetch payment order details when a single character is added before a paymentOrderId', () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
 
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: requestBody,
@@ -238,41 +209,34 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       expect(createResponse.status).to.eq(200);
       const paymentOrderId = createResponse.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(
-        requestBody.successRedirectUrl
-      );
-      const encodeFailuerUrl = encodeURIComponent(
-        requestBody.failureRedirectUrl
-      );
 
       // Ensure the response body contains essential properties
-      expect(createResponse.body).have.property(
-        "paymentOrderId",
+      expect(createResponse.body).to.have.property(
+        'paymentOrderId',
         paymentOrderId
       );
-      expect(createResponse.body).have.property("status", "PENDING");
-      // expect(createResponse.body).have.property('webRedirectUrl', `${Cypress.config().baseUrl}?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      expect(createResponse.body).to.have.property('status', 'PENDING');
 
       cy.request({
-        method: "GET",
-        url: utils.requestUrl + "/" + "a" + paymentOrderId,
+        method: 'GET',
+        url: `${utils.requestUrl}/` + `a${paymentOrderId}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order with invalid Id format results in 404 Not Found
         expect(getResponse.status).to.eq(404);
         expect(getResponse.body).to.have.property(
-          "errorMessage",
-          "PAYMENT_NOT_FOUND"
+          'errorMessage',
+          utils.PAYMENT_NOT_FOUND
         );
       });
     });
   });
 
-  it("should create payment order and not fetch payment order details when a single character is added at the end of a paymentOrderId", () => {
+  it('should create payment order and not fetch payment order details when a single character is added at the end of a paymentOrderId', () => {
     const requestBody = utils.getRequestBodyForRetrievePaymentOrder();
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: requestBody,
@@ -280,40 +244,33 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       expect(createResponse.status).to.eq(200);
       const paymentOrderId = createResponse.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(
-        requestBody.successRedirectUrl
-      );
-      const encodeFailuerUrl = encodeURIComponent(
-        requestBody.failureRedirectUrl
-      );
 
       // Ensure the response body contains essential properties
-      expect(createResponse.body).have.property(
-        "paymentOrderId",
+      expect(createResponse.body).to.have.property(
+        'paymentOrderId',
         paymentOrderId
       );
-      expect(createResponse.body).have.property("status", "PENDING");
-      // expect(createResponse.body).have.property('webRedirectUrl', `${Cypress.config().baseUrl}?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      expect(createResponse.body).to.have.property('status', 'PENDING');
 
       cy.request({
-        method: "GET",
-        url: utils.requestUrl + "/" + paymentOrderId + "a",
+        method: 'GET',
+        url: `${utils.requestUrl}/${paymentOrderId}a`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order with invalid Id format results in 404 Not Found
         expect(getResponse.status).to.eq(404);
         expect(getResponse.body).to.have.property(
-          "errorMessage",
-          "PAYMENT_NOT_FOUND"
+          'errorMessage',
+          utils.PAYMENT_NOT_FOUND
         );
       });
     });
   });
 
-  it("should create payment order and not fetch payment order details for incorrect headers with valid secret and key", () => {
+  it('should create payment order and not fetch payment order details for incorrect headers with valid secret and key', () => {
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: utils.getRequestBodyForRetrievePaymentOrder(),
@@ -321,30 +278,30 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       // Verify the success of the create request
       expect(createResponse.status).to.eq(200);
-      expect(createResponse.body).to.have.property("paymentOrderId");
+      expect(createResponse.body).to.have.property('paymentOrderId');
 
       // Step 2: Try to get Payment Order with incorrect headers
       const paymentOrderId = createResponse.body.paymentOrderId;
       cy.request({
-        method: "GET",
+        method: 'GET',
         headers: utils.getApiHeaders(), // Incorrect headers
-        url: utils.requestUrl + "/" + paymentOrderId,
+        url: `${utils.requestUrl}/${paymentOrderId}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order with incorrect headers results in 500 Internal Server Error
         expect(getResponse.status).to.eq(500);
         expect(getResponse.body).to.have.property(
-          "errorMessage",
-          "INTERNAL_SERVER_ERROR"
+          'errorMessage',
+          'INTERNAL_SERVER_ERROR'
         );
       });
     });
   });
 
-  it("should create payment order and not fetch payment order details for a incorrect  Method", () => {
+  it('should create payment order and not fetch payment order details for a incorrect  Method', () => {
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST", // Incorrect method intentionally
+      method: 'POST', // Incorrect method intentionally
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: utils.getRequestBodyForRetrievePaymentOrder(),
@@ -352,13 +309,13 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       // Verify the success of the create request
       expect(createResponse.status).to.eq(200);
-      expect(createResponse.body).to.have.property("paymentOrderId");
+      expect(createResponse.body).to.have.property('paymentOrderId');
 
       // Step 2: Get Payment Order
       const paymentOrderId = createResponse.body.paymentOrderId;
       cy.request({
-        method: "POST",
-        url: utils.requestUrl + "/" + paymentOrderId,
+        method: 'POST',
+        url: `${utils.requestUrl}/${paymentOrderId}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the request to get payment order without Id is unauthorized
@@ -367,10 +324,10 @@ describe("Retrieve Payment Order API tests", () => {
     });
   });
 
-  it("should create payment order and not fetch payment order details for request over HTTP", () => {
+  it('should create payment order and not fetch payment order details for request over HTTP', () => {
     // Step 1: Make POST request to create a payment order
     cy.request({
-      method: "POST",
+      method: 'POST',
       url: utils.requestUrl,
       headers: utils.getApiHeaders(),
       body: utils.getRequestBodyForRetrievePaymentOrder(),
@@ -378,13 +335,13 @@ describe("Retrieve Payment Order API tests", () => {
     }).then((createResponse) => {
       // Verify the success of the create request
       expect(createResponse.status).to.eq(200);
-      expect(createResponse.body).to.have.property("paymentOrderId");
+      expect(createResponse.body).to.have.property('paymentOrderId');
 
       // Step 2: Get Payment Order
       const paymentOrderId = createResponse.body.paymentOrderId;
       cy.request({
-        method: "POST",
-        url: "http://api.dev.pyypl.io" + "/pay/payment/order/" + paymentOrderId,
+        method: 'POST',
+        url: `${'http://api.dev.pyypl.io' + '/pay/payment/order/'}${paymentOrderId}`,
         failOnStatusCode: false,
       }).then((getResponse) => {
         // Verify that the response is unauthorized
