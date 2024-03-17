@@ -21,6 +21,6 @@ import "cypress-mochawesome-reporter/register";
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 // @ts-ignore
-import registerCypressGrep from "@cypress/grep";
+// import registerCypressGrep from "@cypress/grep";
 
-registerCypressGrep();
+// registerCypressGrep();
