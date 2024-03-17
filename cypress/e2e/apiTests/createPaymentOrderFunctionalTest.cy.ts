@@ -1,43 +1,47 @@
 import * as utils from "../../support/utils";
 
 describe("Create Payment Order API tests", () => {
-  it("Successfully creates a payment order with valid request with all  parameters", () => {
-    // Step 1: Make a POST request to create a payment order with valid parameters
-    cy.request({
-      method: "POST",
-      url: utils.requestUrl,
-      failOnStatusCode: false,
-      headers: utils.getApiHeaders(), // Include headers with valid secret and key
-      body: {
-        amount: utils.generateRandomAmount(),
-        currency: Cypress._.shuffle(utils.currencies)[0],
-        description: "Test Payment Order",
-        metadata: {
-          orderId: "1",
-          externalReference: "0001",
+  it(
+    "Successfully creates a payment order with valid request with all  parameters",
+    { tags: "@smoke" },
+    () => {
+      // Step 1: Make a POST request to create a payment order with valid parameters
+      cy.request({
+        method: "POST",
+        url: utils.requestUrl,
+        failOnStatusCode: false,
+        headers: utils.getApiHeaders(), // Include headers with valid secret and key
+        body: {
+          amount: utils.generateRandomAmount(),
+          currency: Cypress._.shuffle(utils.currencies)[0],
+          description: "Test Payment Order",
+          metadata: {
+            orderId: "1",
+            externalReference: "0001",
+          },
+          successRedirectUrl: utils.successRedirectUrl,
+          failureRedirectUrl: utils.failureRedirectUrl,
         },
-        successRedirectUrl: utils.successRedirectUrl,
-        failureRedirectUrl: utils.failureRedirectUrl,
-      },
-    }).then((response) => {
-      // Verify that the create request was successful
-      expect(response.status).to.eq(200);
-      const paymentOrderId = response.body.paymentOrderId;
-      const encodeSuccessUrl = encodeURIComponent(utils.successRedirectUrl);
-      const encodeFailuerUrl = encodeURIComponent(utils.failureRedirectUrl);
+      }).then((response) => {
+        // Verify that the create request was successful
+        expect(response.status).to.eq(200);
+        const paymentOrderId = response.body.paymentOrderId;
+        const encodeSuccessUrl = encodeURIComponent(utils.successRedirectUrl);
+        const encodeFailuerUrl = encodeURIComponent(utils.failureRedirectUrl);
 
-      // Ensure the response body contains essential properties
-      expect(response.body).have.property("paymentOrderId", paymentOrderId);
-      expect(response.body).have.property("status", "PENDING");
-      // expect(response.body).have.property(
-      //   "webRedirectUrl",
-      //   `${
-      //     Cypress.config().baseUrl
-      //   }?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`
-      // );
-      // expect(response.body).have.property('webRedirectUrl', `http://localhost:8000?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
-    });
-  });
+        // Ensure the response body contains essential properties
+        expect(response.body).have.property("paymentOrderId", paymentOrderId);
+        expect(response.body).have.property("status", "PENDING");
+        // expect(response.body).have.property(
+        //   "webRedirectUrl",
+        //   `${
+        //     Cypress.config().baseUrl
+        //   }?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`
+        // );
+        // expect(response.body).have.property('webRedirectUrl', `http://localhost:8000?paymentOrderId=${paymentOrderId}&successRedirectUrl=${encodeSuccessUrl}&failureRedirectUrl=${encodeFailuerUrl}`)
+      });
+    }
+  );
 
   it("Successfully creates a payment order with valid request with only required parameters - Amount and Currency", () => {
     // Step 1: Make a POST request to create a payment order with required parameters

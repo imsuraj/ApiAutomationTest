@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "types": ["node"],
+    "types": ["node", "cypress", "@cypress/grep"],
     "baseUrl": "./",
     "module": "commonjs",
     "moduleResolution": "node", // Update this line
